@@ -1,0 +1,147 @@
+第一代日期类：
+1）Date:精确到毫秒，代表特定的瞬间
+public class Date
+    implements java.io.Serializable, Cloneable, Comparable<Date>
+
+2）SimpleDateFormat:格式和解析日期的类（日期->文本，文本->日期）
+
+public class Date01 {
+    public static void main(String[] args) throws ParseException {
+        Date date = new Date(0);
+        System.out.println(date);
+        //Thu Jan 01 08:00:00 GMT+08:00 1970
+        //默认格式是国外的格式
+        //创建SimpleFormatter可以指定相应的格式
+        //可以查文档https://java.cunzaima.cn/jdk21/doc-zh/api/java.base/java/text/SimpleDateFormat.html
+        SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss E");
+        String format = simpleFormatter.format(date);
+        System.out.println(format);
+        //1970年01月01日 08:00:00 周四
+
+        //1.可以把一个格式化的String转换成对应的Date
+        //2.Date输出时，依然是国外形式，如果需要格式化输出，请转换
+        //3. 再把String ->Date 使用的simpleFormatter需要和你给的String格式一样，否则会有转换异常
+        String s = "2024年09月05日 02:33:30 周四";
+        Date parse = simpleFormatter.parse(s);
+        System.out.println(parse);
+        //Thu Sep 05 02:33:30 GMT+08:00 2024
+        System.out.println(simpleFormatter.format(parse));
+        //2024年09月05日 02:33:30 周四
+
+    }
+}
+
+
+第二代日期类
+Calendar类：
+public abstract class Calendar implements Serializable, Cloneable, Comparable<Calendar> {
+Calendar是一个抽象类，它位特定瞬间与一组诸如YEAR,MONTH,DAY,HOUR等日历字段之间提供了一些方法
+并位操作日历字段（例如获取下星期的日期）提供了一些方法。
+
+public class Cal {
+    public static void main(String[] args) {
+        //Calendar是一个抽象类，构造器是private
+        //可以通过getInstance()获取一个实例
+        Calendar c = Calendar.getInstance();
+        System.out.println(c);
+        //日期存储在属性里
+        //java.util.GregorianCalendar[time=1725518588119,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id="GMT+08:00",
+        // offset=28800000,dstSavings=0,useDaylight=false,transitions=0,lastRule=null],firstDayOfWeek=2,minimalDaysInFirstWeek=1,ERA=1,
+        // YEAR=2024,MONTH=8,WEEK_OF_YEAR=36,WEEK_OF_MONTH=2,DAY_OF_MONTH=5,DAY_OF_YEAR=249,DAY_OF_WEEK=5,DAY_OF_WEEK_IN_MONTH=1,AM_PM=1,
+        // HOUR=2,HOUR_OF_DAY=14,MINUTE=43,SECOND=8,MILLISECOND=119,ZONE_OFFSET=28800000,DST_OFFSET=0]
+        System.out.println("年： " + c.get(Calendar.YEAR));
+        System.out.println("月： " + (c.get(Calendar.MONTH) + 1));
+        System.out.println("日： " + c.get(Calendar.DAY_OF_MONTH));
+        System.out.println("时： " + c.get(Calendar.HOUR));//12小时制
+        System.out.println("时： " + c.get(Calendar.HOUR_OF_DAY));//24小时制
+
+
+        System.out.println("分： " + c.get(Calendar.MINUTE));
+        System.out.println("秒： " + c.get(Calendar.SECOND));
+
+        //Calendar没有提供对应的格式化的类，因此需要程序员自己组合来输出。
+
+
+    }
+}
+
+
+第一代和第二代日期类存在着一些问题：
+可变性：向日期和时间这样的类应该是不可变的
+偏移性：Date中的年份是从1970开始的，而Calendar月份是从0开始的
+格式化：只有Date有格式化，Calendar没有格式化
+此外，它们也不是线程安全的，不能处理闰秒（每隔2天，多出1s）
+
+
+第三代日期类：JDK8加入
+1）LocalDate    只有年月日
+2）LocalTime    只有时分秒
+3）LocalDateTime年月日时分秒
+
+public final class LocalDateTime
+        implements Temporal, TemporalAdjuster, ChronoLocalDateTime<LocalDate>, Serializable {
+    private LocalDateTime(LocalDate date, LocalTime time) {
+        this.date = date;
+        this.time = time;
+    }
+
+public class Local_ {
+    public static void main(String[] args) {
+        LocalDateTime ldt = LocalDateTime.now();
+        System.out.println(ldt);////2024-09-05T15:01:00.256168800
+        System.out.println("年： " + ldt.getYear());
+        System.out.println("月： " + ldt.getMonth());      //月： SEPTEMBER
+        System.out.println("月： " + ldt.getMonthValue()); //月： 9
+        System.out.println("日： " + ldt.getDayOfMonth());
+        System.out.println("时： " + ldt.getHour());
+        System.out.println("分： " + ldt.getMinute());
+        System.out.println("秒： " + ldt.getSecond());
+
+
+    }
+}
+
+格式化：
+使用DateTimeFormatter 对象来进行格式化
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH时mm分ss秒 E");
+    String format = dtf.format(ldt);
+    System.out.println(format);//2024年09月05日 15时14分20秒 周四
+
+提供 plus 和 minus 方法可以对当前时间进行加或者减
+LocalDateTime ldt2 = ldt1.plusDays(100);
+LocalDateTime ldt3 = ldt1.minusDays(100);
+    LocalDateTime ldt1 = LocalDateTime.now();
+    System.out.println(ldt1);
+
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH时mm分ss秒 E");
+    String format = dtf.format(ldt1);
+    System.out.println(format);//2024年09月05日 15时14分20秒 周四
+    //2024年09月05日 15时23分38秒 周四
+    LocalDateTime ldt2 = ldt1.plusDays(1);
+    System.out.println(dtf.format(ldt2));
+    //2024年09月06日 15时23分38秒 周五
+    LocalDateTime ldt3 = ldt1.minusDays(1);
+    System.out.println(dtf.format(ldt3));
+    //2024年09月04日 15时23分38秒 周三
+
+Instant 时间戳：
+提供了一系列和Date类转换的方式：
+Date date = Date.from(instant);
+
+Instant instant = date.toInstant();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

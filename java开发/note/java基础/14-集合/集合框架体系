@@ -1,0 +1,39 @@
+集合的理解和好处：
+    前面我们保存多个数据使用的是数组，那么数组也有不足的地方。
+    数组：
+    1）长度开始时必须指定，而且一旦指定，不能修改
+    2）保存的必须为同一类型的元素
+    3）使用数组进行增加或者删除元素的时候比较麻烦
+
+    集合：
+    1）可以动态保存任意多个对象
+    2）提供了一系列方法的操作对象的方法：add、remove、set、get
+    3）使用集合更加方便添加删除元素
+
+集合分为了两组（单列集合，双列集合）
+Collection接口有两个重要的子接口 List Set ,他们的实现子类都是单列集合
+ArrayList arrayList = new ArrayList();
+arrayList.add("jack");
+Map 接口的实现子类是双列集合，存放的是 K-V
+HashMap hashMap = new HashMap();
+HashMap.put("NO1","beijing");
+
+
+
+Iterable
+    Collection 
+        Set
+            TreeSet
+            HashSet
+        List
+            Vector
+            LinkedList
+            ArrayList
+
+
+Map
+    HashMap
+    Hashtable
+        Properties
+    TreeMap
+        LinkedHashMap

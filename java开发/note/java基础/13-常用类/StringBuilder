@@ -1,0 +1,28 @@
+public final class StringBuilder
+    extends AbstractStringBuilder
+    implements Appendable, java.io.Serializable, Comparable<StringBuilder>, CharSequence
+
+1. 继承了AbstractStringBuilder
+2. 实现了Serializable，可以并行化，可以保存到文件中
+3. final class StringBuilder，不能被继承
+4. StringBuilder的父类是AbstractStringBuilder，
+    因此StringBuilder的对象字符序列依然存放在父类的byte[] value中，即堆中
+5. StringBuilder的方法没有做互斥synchronized的处理，
+
+
+一个提供与StringBuffer兼容的API，但不保证同步
+用在字符串缓冲区被单个线程所使用
+如果又可能，建议优先使用该类，因为比StringBuffer快
+
+StringBuilder上主要是append和insert方法
+可以重载这些方法，以接受任意类型的数据
+
+
+String           不可变字符序列，效率低，但是复用率高        
+StringBuffer     可变字符序列，效率高，线程安全synchronized
+StringBuilder    可变字符序列，效率最高，线程不安全
+
+String如果多次执行改变字符串内容的操作，会导致大量的副本字符串停留在内存中，降低效率。
+如果放在循环中，会极大影响程序的性能。
+结论：如果我们对String做大量修改，不要使用String
+

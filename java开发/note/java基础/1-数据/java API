@@ -1,0 +1,13 @@
+API application programming interface 应用程序编程接口
+学会查文档，使用工具
+
+java类的组织形式
+
+JDK
+---包
+    --接口
+    --类
+        --字段
+        --构造方法
+        --成员方法
+    --异常

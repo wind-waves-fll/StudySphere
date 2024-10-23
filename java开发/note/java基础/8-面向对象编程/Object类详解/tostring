@@ -1,0 +1,9 @@
+toString():返回该对象的字符串表示。
+默认返回：全类名+@+哈希值的十六进制
+public String toString() {
+    return getClass().getName() + "@" + Integer.toHexString(hashCode());
+}
+
+一般我们需要重写toString()方法，打印对象或拼接对象时，都会自动调用该对象的toString()方法
+System.out.println(object);
+默认就是：System.out.println(object.toString());

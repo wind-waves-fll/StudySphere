@@ -1,0 +1,9 @@
+执行方法：
+    MyBatis事务：
+    openSession():默认开启事务，进行增删改操作后需要使用sqlSession.commit();手动提交事务
+    openSession(true):可以设置自动提交事务（关闭事务）
+
+添加-主键返回
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+    System.out.println(brand.getId());
+    就将主键绑定到对象上，可以通过get方法获取

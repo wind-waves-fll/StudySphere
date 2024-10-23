@@ -1,0 +1,83 @@
+ JDBD就是用java语言操作关系型数据库的一套API
+ Java DateBase Connectivity
+ JDBC定义了一套标准接口，来操作不同的关系型数据库
+ JDBC本质：
+    官方定义的一套操作所有关系型数据库的规则，即接口
+    各个数据库厂商实现这套接口，提供数据库驱动jar包（就是实现接口的类）
+    我们可以使用这套接口（JDBC）编程，真正执行代码的是驱动jar包中的实现类
+同一套JAVA代码，可以操作不同的关系型数据库
+JDBC好处：
+    各数据库厂商都使用相同的接口，JAVA代码不需要针对不同的数据库进行开发
+    可随时替换底层数据库，访问数据库的JAVA代码基本不变
+
+
+
+
+
+下载mysql对应的驱动：
+    https://downloads.mysql.com/archives/c-j/
+
+Connection con = DriverManager.getConnection(url, username, password);
+url:
+    语法：jdbc:mysql://ip地址(域名)：端口号/数据库名称？参数键值对1&参数键值对2
+    细节：如果是本机的mysql服务器，可以简写  jdbc:mysql:///数据库名称？参数键值对
+        配置 useSSL=false 参数，禁用安全连接方式，解决警告提示。
+Connection:
+    1. 获取执行SQL的对象
+        普通执行SQL对象          Statement createStatement();
+        预编译SQL的执行SQL对象：防止SQL注入 PreparedStatement prepareStatement(sql);
+        执行存储过程的对象          CallableStatement prepareCall(sql)
+    2. 事务管理
+        MySQL事务管理
+            开启事务：BEGIN;START TRANSACTION;
+            提交事务: COMMIT
+            回滚事务: ROLLBACK;
+        JDBC事务管理
+            开启事务: setAutoCommit(boolean autoCommit): true为自动提交，false为手动提交,即为开启事务
+            提交事务: commit()
+            回滚事务: rollback( )
+
+
+Statement作用：
+    1. 执行SQL语句
+        int executeUpdate(sql):执行DML、DDL语句
+            返回值：（1）DML语句影响的行数（2）DDL语句执行后，执行成功也可能返回0
+        Result executeQuery(sql)：执行DQL语句 
+            返回值：ResultSet结果集对象
+
+ResultSet：
+    1. 封装了DQL查询语句的结果 Statement stmt = con.createStatement();
+    获取查询结果：
+        boolean next():
+            将光标从当前位置向下移动一行并判断当前行是否为有效行
+            返回值：true 有效行  false 无效行 
+        xxx getXxx(参数):获取数据
+            xxx:数据类型；如： int getInt(参数)； String getString(参数)
+            参数：
+                int:列的编号，从1开始
+                String：列的名称
+
+PreparedStatement：
+    1. 预编译SQL语句并执行，预防SQL注入问题（将敏感字符进行转义）
+        SQL注入是通过操作输入来修改事先定义好的SQL语句，用以达到执行代码对服务器进行攻击的方法
+    2. 
+        获取PreparedStatement对象
+            String  sql = "select * from user where username = ? and password = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+        设置参数值
+            PreparedStatement对象： setXxx(参数1，参数2)：给？赋值
+            Xxx:数据类型； 比如setInt(参数1，参数2)
+            参数：
+                参数1：？的位置编号，从1开始
+                参数2：？的值
+        执行SQL：
+            executeUpdate(); //不需要再传递sql
+
+PreparedStatement原理：
+    默认PreparedStatement预编译功能关闭。开启的话：useServerPrepStmts=true;
+    1. 在获取PreparedStatement对象时，将sql语句发送给mysql服务器进行检查，编译（这些步骤比较耗时）
+    2. 执行时就不需要再进行这些步骤了，速度很快
+    3. 如果sql模板一样，则只需要进行一次检查，编译。
+
+选择PreparedStatement对象与否，在于相同句法的SQL语句是否执行了多次，而且两次之间的差别仅仅是变量的不同。
+如果仅仅执行了一次的话，它应该和普通的对象毫无差异，体现不出它预编译的优越性。

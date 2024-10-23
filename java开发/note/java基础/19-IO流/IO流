@@ -1,0 +1,173 @@
+Java IO流原理
+1. I/O技术用于处理数据传输，如读写文件，网络通讯
+2. Java中，对于数据的输入输出以流的方式进行
+3. java.io包下提供了各种流类和接口，用以获取不同种类的数据，
+    并通过方法输入或输出数据。
+
+流的分类：
+按操作单位不同分为：字节流（8 bit），字符流（按字符）
+按数据流向不同分为：输入流、输出流
+按流的角色不同分为：节点流，处理流（包装流）
+
+抽象基类    字节流          字符流
+输入流      InputStream     Reader
+输出流      OutputStream    Writer
+(1) Java的IO流共涉及40多个子类，都是有上面4个抽象类派生出来的
+(2) 子类都是以父类名作后缀的
+
+
+InputStream：
+    FileInputStream：   文件输入流
+    BufferedInputStream:缓冲字节输入流
+    ObjectInputStream:  对象字节输入流
+
+        public class FileInputStream extends InputStream
+        read()  从此输入流中读取一个字节的数据。 下一个数据字节，如果已到达文件末尾，则返回 -1。
+        编码：GBK 英文字母：字节数 : 1  中文汉字：2
+        UTF-8 英文字母：字节数 : 1   中文汉字：3
+
+        read(byte[] b) 从此输入流中最多读取 b.length 字节的数据到字节数组中。
+                        读入缓冲区的总字节数，如果没有更多数据因已到达文件末尾而返回 -1。
+                        int readlen = 0;
+                        byte[] buf = new byte[8];
+                        while((readlen = fileInputStream.read(buf)) != -1){
+                            System.out.println(new String(buf,0,readlen))
+                        }
+        getFD()  返回与此流关联的文件描述符。
+
+        getChannel() 返回与此文件输出流关联的唯一FileChannel对象。
+
+
+
+FileOutputStream
+    public class FileOutputStream extends OutputStream
+        如果文件不存在，会创建文件，前提是目录已经存在
+        写入会覆盖 fileOutputStream = new FileOutputStream(filePath)
+        追加的方式 fileOutputStream = new FileOutputStream(filePath,true)
+        write(int b)  将指定的字节写入此文件输出流。
+
+        write(byte[] b) 将指定的字节数组中的b.length字节写入此文件输出流。
+        str.getBytes():将字符串->字节数组
+        fileOutputStream.write(str.getBytes());
+
+        write(byte[] b, int off, int len) 从指定的字节数组中的偏移量off开始，将len字节写入此文件输出流。
+
+        getFD()  返回与此流关联的文件描述符。
+
+        getChannel() 返回与此文件输出流关联的唯一FileChannel对象。
+
+        close() 关闭此文件输出流并释放与此流关联的任何系统资源。
+
+        文件拷贝：
+        //1. 创建文件的输入流，将文件读入到程序
+        //2. 创建文件的输出流，将读取到的文件，写入到指定位置
+        //3. 读取部分数据，就写入到文件里
+
+FileReader:
+    public class FileReader extends InputStreamReader 
+    1）new FileReader(File/String)
+    2）read:每次读取单个字符，返回该字符，如果到文件末尾返回-1
+    3）read(char[]):批量读取多个字符到数组，返回读取到的字符数，如果到文件末尾返回-1
+    相关API：
+    1）new String(char[]):将char[]转成String
+    2）new String(char[],off,len):将char[]的指定部分转成String
+
+FileWriter:
+    public class FileWriter extends OutputStreamWriter 
+    public class OutputStreamWriter extends Writer
+    常用方法：
+    1）new FileWriter(File/String):覆盖模式，相当于流的指针在首端
+    2）new FileWriter(File/String，true):追加模式，相当于流的指针在尾端
+    3）write(int):
+    4）write(char[])
+    5）write(char[],off,len)
+    6）write(string)
+    7）write(string,off,len)
+    相关api:String类：toCharArray:将String转换成char[]
+    注意：FileWriter使用后，必须要关闭（close）或者刷新（flush）,否则写入不到指定的文件！
+        为什么呢？因为在close()中的执行了写入操作。其实close等价于 flush() + 关闭.
+
+public class BufferedInputStream extends FilterInputStream          public class FilterInputStream extends InputStream 
+
+1. 节点流可以从一个特定的数据源读写数据，如FileReader、FileWriter
+2. 处理流（也叫包装流）是连接在已存在的流之上，为程序提供更为强大的读写功能，如BufferedReader、BufferedWriter，对Reader和Writer的子类进行了包装，
+    public class BufferedReader extends Reader {
+        private Reader in;
+    }
+    public class BufferedWriter extends Writer {
+        private Writer out;
+    }
+
+节点流和处理流的区别和联系：
+1. 节点流是底层流/低级流，直接跟数据源相接
+2. 处理流包装节点流，即可以消除不同节点流的实现差异，也可以提供更方便的方法来完成输入输出。
+3. 处理流对节点流进行包装，使用了修饰器设计模式，不会直接与数据源相连
+
+
+处理流的功能主要体现在以下两个方面：
+1. 性能的提高：主要以增加缓存的方式来提高输入输出的效率
+2. 操作的便捷：处理流提供了一系列便捷的方法来一次输入输出大批量的数据，使用更加灵活方便。
+
+处理流在调用时，利用对象的动态绑定机制来绑定到对应的实现子类即可。
+
+BufferedReader、BufferedWriter属于字符流，是按照字符来读取数据的。读取文本文件而不能是二进制文件
+关闭处理流时，只需要关闭外层流（处理流）即可.原因看源码可以发现，关闭外层流时，会自动关闭节点流
+public void close() throws IOException
+    implClose();
+        in.close();
+readLine(): 包含行内容（不包括任何行终止字符）的字符串，如果已到达流的末尾而没有读取任何字符，则为null
+说明：覆盖方式还是追加方式，和我们传入的节点流相关，设置true就是追加，不设置就是覆盖。
+BufferedReader bufferWriter = new BufferWriter(new FileWriter())
+bufferWriter.write("hello!")
+readLine():读取一行内容，但没有换行符。
+newLine():插入一个换行符（和系统相关）
+
+BufferedInputStream 和 BufferedOutputStream 属于字节流，既可以操作二进制文件，又可以操作文本文件。
+
+public class ObjectInputStream  
+    extends InputStream implements ObjectInput, ObjectStreamConstants
+public ObjectInputStream(InputStream in) 
+
+public class ObjectOutputStream
+    extends OutputStream implements ObjectOutput, ObjectStreamConstants
+public ObjectOutputStream(OutputStream out) 
+基本数据类型 或者 对象 序列化或反序列化
+
+1. 序列化：保存值和数据类型
+2. 反序列化：将保存在文件的数据（值和数据类型）重新恢复成对象
+3. 需要让某个对象支持序列化机制，则必须让其类是可序列化的
+    实现以下两个接口之一：
+        Serializable    //这是一个标记接口，没有方法。
+        Externalizable  //该接口有方法需要实现，因此我们一般用Serializable就可以了
+        public interface Externalizable extends java.io.Serializable
+
+//序列化后，保存的文件格式，不是文本，而是按照它的格式来保存
+//后缀都可以，没有意义。
+String filePath = "e:\\data.dat";
+ObjectOutputStream oos = new ObjectOutputStream(new FileInputStream(filePath));
+oos.write(100);//int->Integer (自动装箱，Integer实现了Serializable)
+oos.writeBoolean(true); boolean->Boolean
+oos.writeChar('a');char->Character
+oos.write(9.5);double->Double
+oos.writeUTF("fll");String
+oos.write
+
+ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath));
+ois.readInt()
+ois.readBoolean()
+ois.readChar()
+ois.readDouble()
+ois.readUtf()
+Object dog = ois.readObject()
+//需要我们将Dog类的定义，拷贝到可以引用的位置
+//然后进行向下转型
+Dog dog2 = (Dog)dog;
+
+细节：
+1. 读写顺序要一致
+2. 要求序列化和反序列化的对象，需要实现Serializable 
+3. 序列化的类中建议添加SerialVersionUID,为了提高版本的兼容性
+4. 序列化对象时，默认将里面的所有属性都进行序列化，但除了
+    static和transient修饰的成员
+5. 序列化对象时，要求里面属性的类型也需要实现序列化接口
+6. 序列化具备可继承性，也就是如果父类实现了序列化，则它的子类也实现了序列化。

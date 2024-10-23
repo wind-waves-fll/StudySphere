@@ -1,0 +1,12 @@
+                        类型            默认设备
+System.in   标准输入    InputStream     键盘
+System.out  标准输出    PrintStream     显示器
+
+System.in:public static final InputStream in = null;
+        编译类型：InputStream
+        运行类型：System.in.getClass():BufferedInputStream
+
+
+System.out:public static final PrintStream out = null;
+        编译类型：PrintStream
+        运行类型：PrintStream

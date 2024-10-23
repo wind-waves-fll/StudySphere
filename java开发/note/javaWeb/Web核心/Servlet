@@ -1,0 +1,79 @@
+Servlet 是 Java 提供的一门动态web资源开发技术
+Servlet 是JavaEE 规范(共13项规范)之一，其实就是一个接口，将来我们需要定义Servlet类实现Servlet接口，并由web服务器运行Servlet
+
+快速入门：
+    1. 创建web项目，导入Servlet依赖坐标
+    2. 创建，定义一个类，实现 Servlet A接口，并重写接口中的所有方法
+    3. 配置：在类上使用@WebServlet注解，配置该Servlet的访问路径
+    4. 访问：启动Tomcat,浏览器输入URL访问该Servlet
+
+Servlet 执行流程：
+    1. Servlet 由 web服务器创建，Servlet方法由 web服务器 调用
+    2. 服务器怎么知道Servlet中一定有service方法
+        因为我们自定义的Servlet，必须实现Servlet接口并复写其方法，而Servlet接口中有service方法
+
+Servlet生命周期：
+    对象的生命周期指一个对象从被创建到被销毁的整个过程
+    Servlet运行在Servlet容器中，其生命周期由容器来管理，分为4个阶段
+        1. 加载和实例化：默认情况下，当Servlet第一次被访问时，由容器创建Servlet对象
+            @WebServlet("/demo1"，loadOnStartup = 1)
+            负整数：第一次被访问时创建Servlet对象
+            非负数：服务器启动时创建Servlet对象，数字越小优先级越高
+        2. 初始化：在Servlet实例化之后，容器将调用Servlet的init()方法初始化这个对象，完成一些如加载配置文件、创建连接等初始化的工作
+                该方法只调用一次
+        3. 请求处理：每次请求Servlet时，Servlet容器都会调用Servlet的service()方法对请求进行处理
+        4. 服务终止: 在需要释放内存或容器关闭时，容器就会调用Servlet实例的destory()方法完成资源的释放。
+                    在destory()方法调用之后，容器会释放这个Servlet()实例，该实例随后会被Java的垃圾回收机制所回收。
+
+Servlet体系结构：
+    Servlet:        Servlet体系根接口
+    GenericServlet: Servlet抽象实现类
+    HttpServlet:    对Http协议封装的Servlet实现类
+
+        我们将来开发的B/S架构的web项目，都是针对HTTP协议，所以我们自定义的Servlet，会继承HttpServlet
+        重写 doGet() doPost()
+        HttpServlet原理：
+            获取请求方式，并根据不同的请求方式，调用不同的doXxx方法
+
+urlPattern配置：
+    Servlet要想被访问，必须配置其访问路径(urlPattern)
+        1. 一个Servlet，可以配置多个urlPattern  @WebServlet(urlPattern = {"/demo1"，"/demo2"})
+        2. urlPattern配置规则：
+            精确匹配    @WebServlet("/demo2")
+            目录匹配    @WebServlet("/demo2/*")
+            扩展名匹配  @WebServlet("*.io") 不能以/开头
+            任意匹配    @WebServlet("/") 或 @WebServlet("/*") 
+                / 和 /* 区别：
+                    当我们的项目中的Servlet配置了“/”，会覆盖掉tomcat中的DefaultServlet，当其它的url-pattern都匹配不上时会走这个Servlet
+                    当我们的项目中配置了“/*”，意味着匹配任意访问路径
+                默认的用来处理静态资源，最好不要使用
+
+
+XML配置方式编写Servlet
+        <!--servlet与servlet-mapping标签需同时使用-->
+        <!--创建servlet标签-->
+        <servlet>
+            <!--给指定的servlet类起一个名字-->
+            <servlet-name>demo01</servlet-name>
+            <!--servlet类的全限定路径-->
+            <servlet-class>com.demo.servlet.DemoServlet</servlet-class>
+            <!--servlet初始化加载优先级(0~10)-->
+            <load-on-startup>0</load-on-startup>
+        </servlet>
+
+        <!--创建servlet映射标签-->
+        <servlet-mapping>
+            <!--映射到哪个servlet，与上面一致-->
+            <servlet-name>demo01</servlet-name>
+            <!--客户端访问路径 localhost:8080/项目名称/demo-->
+            <url-pattern>/demo</url-pattern>
+        </servlet-mapping>
+
+
+
+
+
+
+
+
+

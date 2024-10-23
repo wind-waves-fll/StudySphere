@@ -1,0 +1,124 @@
+String对象用于保存字符串，是用双引号括起的
+字符串使用Unicode字符编码，一个字符(不区分字母和汉字)占两个字节
+String常用的构造器：
+    String s1 = new String();
+    String s2 = new String(String original)
+    String s3 = new String(char[] a)
+    String s4 = new String(char[] a,int startIndex,int count)
+
+public final class String
+    implements java.io.Serializable, Comparable<String>, CharSequence,
+               Constable, ConstantDesc
+               
+    private final byte[] value;
+
+
+实现了Serializable接口：说明String对象可以串行化，就可以网络传输
+实现了Comparable接口：说明String对象可以比较大小
+String类是final类，不能被继承
+String类中有一个属性value，用于存储字符串的内容，
+且是final类型，一旦被赋值了，就不能被改变。（即指向的地址不可以改变）
+但是可以改变单个内容。
+public class String_ {
+    public static void main(String[] args) {
+        final byte[] value = {'a' , 'b' , 'x'};
+        System.out.println(value[1]);
+        value[1] = 'a';
+        System.out.println(value[1]);
+    }
+}
+
+
+方式一：直接赋值 String s = "fll";
+    现在常量池中看有没有，有的话直接指向
+    没有的话在常量池创建，然后再指向
+    最终指向的是常量池的空间地址
+方式二：调用构造器 String s2 = new String("fll");
+    再堆里面创建一个空间，然后指向常量池中的数据
+    常量池中没有，则创建
+    最终指向的是堆的空间地址
+
+String重写了equals，比较的是字符串的内容是否相等。
+
+public boolean equals(Object anObject) {
+    if (this == anObject) {
+        return true;
+    }
+    return (anObject instanceof String aString)
+            && (!COMPACT_STRINGS || this.coder == aString.coder)
+            && StringLatin1.equals(value, aString.value);
+}
+
+public class String_ {
+    public static void main(String[] args) {
+        String a = "abc";
+        String b = "abc";
+        String c = new String("abc");
+        System.out.println(a.equals(b));    //true
+        System.out.println(a == b);         //true
+        System.out.println(a.equals(c));    //true
+        System.out.println(a == c);         //false
+
+    }
+}
+
+public String intern():
+    当调用intern方法时，如果池中已经包含一个与此String对象相等的字符串（由equals(Object)方法确定），则返回池中的字符串。
+    否则，将此String对象添加到池中，并返回对此String对象的引用。
+    因此，对于任何两个字符串s和t，只有当s.equals(t)为true时，s.intern() == t.intern()才为true。
+    简而言之：最终返回的是指向常量池的地址。
+
+String a = "hello" + "abc";
+底层会优化： String a = "helloabc";
+所以一共只用创建一个对象
+
+String a = "hello";
+String b = "abc";
+Sting c = a + b;
+String d = "helloabc"
+一共创建了3个对象；//不对，错了，呜呜呜
+System.out.println(c == d); //false
+一共创建了4个对象；//c指向堆区的一个对象，堆对象指向常量区的"helloabc"
+String c1 = "ab" + "cd";  //常量相加，看的是池
+Sting  c2 = a + b ;       //变量相加，看的是堆
+
+String类是保存字符串常量的，每次更新需要重新开辟空间，效率低
+因此java设计者还提供了StringBuilder和StringBuffer来增强String的功能。
+
+String类的常见方法：
+    equals:             区分大小写，判断内容是否相等
+    equalsIgnoreCase:   忽略小写，判断内容是否相等
+    length:             获取字符的个数
+    indexOf:            获取字符（也可以是字符串）首次出现的索引，没有返回-1
+    lastIndexOf:        获取字符最后出现的索引，没有返回-1
+    substring:          截取指定范围的子串
+        name.substring(6)  索引6到最后
+        name.substring(3,5) 从索引3开始，到索引4（5-1），左闭右开。
+    trim:               去前后空格
+    chartAt:            获取某索引处的字符
+    
+    toUpperCase:        全部大写
+    toLowerCase:        全部小写
+    concat:             拼接字符串
+    replace:            替换字符串（char oldChar, char newChar）
+    split:              分割字符串
+        String a = "E:\\AA\\BB";
+        String[] b = a.split("\\\\");
+        for(String i : b){
+            System.out.println(i);
+        }
+        特殊字符，需要有转义符
+    compareTo:          比较两个字符串的大小
+    toCharArray:        转换成字符串数组
+    format:             格式化字符串
+        String info = String.format("我的名字是%s,年龄是%d",name,age);
+        String formatStr = "我的名字是%s,年龄是%d";
+        String info2 = String.format(formatStr,name,age);
+        %s      表示后面由字符串来替代
+        %d      表示后面由整数来替代
+        %.2f    表示后面使用小数来替代，保留2位，并且4舍5入
+        %c      表示后面使用char类型来替代
+
+
+
+

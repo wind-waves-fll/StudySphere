@@ -1,0 +1,44 @@
+file->setting->Editor->File and Code Templates->Includes
+可以用来设置版权信息
+
+枚举类：有限的值，只读不可以修改，枚举属于一种特殊的类，里面只包含一组有限的特定的对象
+枚举是一组常量的集合
+
+自定义枚举：
+1.将构造器私有化，母的防止直接new
+2.去掉setXxx方法，防止属性被修改
+3.在Season内部，直接创建固定的对象
+4.对枚举对象/属性使用final+static共同修饰，实现底层优化
+5.枚举对象名通常使用全部大写，符合规范
+6.枚举对象根据需要，也可以有多个属性
+public final static Season SPRING = new Season("春天")；
+public final static Season WINTER = new Season("冬天")；
+public final static Season SUMMER = new Season("夏天")；
+public final static Season AUTUMN = new Season("秋天")；
+
+
+enum关键字实现枚举：
+    1.使用关键字enum替代class
+    2.public final static Season SPRING = new Season("春天")；
+        直接使用 SPRING("春天") 即常量名(实参列表)  调用了相应的构造器
+    3.如果有多个常量(对象)，使用”,”间隔，最后一个使用“；“
+    4.如果使用enum来实现枚举，要求将定义的常量对象写在最前面。
+
+注意：
+    1. 当我们使用enum关键字来开发一个枚举类，会默认继承java.lang.Enum类
+        可以使用javap工具来演示
+        Hello.java--->javac--->Hello.class--->javap(反编译)--->Hello.java
+    2. 如果我们使用的是无参构造器，创建常量对象，则可以省略小括号 
+    3. 枚举对象必须放在类的行首
+
+
+System.out.println() 默认调用的是toString()方法。
+enum实现的枚举类是继承Enum的，而且Enum的构造器中传入的是枚举常量的名称和它的序号
+Enum的toString()方法返回的是name，即枚举常量的名称。
+    protected Enum(String name, int ordinal) {
+        this.name = name;
+        this.ordinal = ordinal;
+    }
+    public String toString() {
+        return name;
+    }

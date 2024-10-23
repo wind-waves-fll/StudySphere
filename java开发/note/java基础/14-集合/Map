@@ -1,0 +1,135 @@
+public class HashMap<K,V> extends AbstractMap<K,V>
+    implements Map<K,V>, Cloneable, Serializable {
+
+Map接口实现类的特点：
+1）Map用于保存具有映射关系的数据：key-value
+2）Map中的key和value可以是任何引用类型的数据，会封装到HashMap$Node对象中
+3）Map中的key不允许重复，原因和HashSet一样，看源码
+4）Map中的value可以重复
+5）Map的key可以为null，value也可以为null，注意key为null只有一个，value为null可以多个
+6）常用String类作为Map的key
+7）key和value之间存在单向一对一关系，即通过指定的key总能找到对应的value
+8）Map的key-value是放在一个Node中的，Node实现了Entry接口。
+    有些书上也说 一对k-v就是一个Entry
+    static class Node<K,V> implements Map.Entry<K,V> 
+        final int hash;
+        final K key;
+        V value;
+        Node<K,V> next;
+
+
+    1. key-value 最后是 HashMap$Node node = newNode(hash, key, value, null);
+    2. k-v为了方便程序员的遍历，还会创建 EntrySet集合，该集合的元素是Entry,
+        Entry对象就有 k,v  
+        transient Set<Map.Entry<K,V>> entrySet;
+
+        Set set = map.entrySet();
+        System.out.println(set.getClass()); 
+        //class java.util.HashMap$EntrySet
+        //到处都是内部类
+    3. entrySet 中，定义的类型是 Map.Entry，但实际存放的是 HashMap$Node
+        这是因 Node实现了Map.Entry
+        static class Node<K,V> implements Map.Entry<K,V>    
+
+    4. 当把HashMap$Node 对象存放到 entrySet 就方便我们的遍历，因为 Map.Entry 提供了重要方法
+        for(Object obj : set){
+            Map.Entry entry = (Map.Entry) obj;
+            System.out.println(entry.getKey() + "-" + entry.getValue());
+        }
+        
+        entrySet其实是指向table表中元素的地址。
+        简单的来说，table表中维护所有的k-v。同时entry还指向了table，然后set 指向k  value指向v。
+        /**
+        * The table, initialized on first use, and resized as
+        * necessary. When allocated, length is always a power of two.
+        * (We also tolerate length zero in some operations to allow
+        * bootstrapping mechanics that are currently not needed.)
+        */
+        transient Node<K,V>[] table;
+
+        /**
+        * Holds cached entrySet(). Note that AbstractMap fields are used
+        * for keySet() and values().
+        */
+        transient Set<Map.Entry<K,V>> entrySet;
+
+
+
+public class Map01_ {
+    public static void main(String[] args) {
+        Map map = new HashMap();
+        map.put("no1","fll");
+        map.put("no2","hsp");
+        Set set = map.entrySet();
+        System.out.println(set.getClass());//class java.util.HashMap$EntrySet
+        for(Object obj : set){
+            Map.Entry entry = (Map.Entry) obj;
+            System.out.println(entry.getKey() + "-" + entry.getValue());
+
+        }
+        Set set1 = map.keySet();
+        System.out.println(set1.getClass());//class java.util.HashMap$KeySet        final class KeySet extends AbstractSet<K> 
+        Collection values = map.values();
+        System.out.println(values.getClass());//class java.util.HashMap$Values      final class Values extends AbstractCollection<V> 
+
+    }
+}
+
+
+Map接口的常用方法：
+1. put:添加
+2. remove：根据键删除映射关系
+3. get:根据键获取值
+4. size:获取元素个数
+5. isEmpty:判断个数是否为0
+6. clear:消除
+7. containsKey:查找键是否存在
+
+Map的遍历方式：
+1. containsKey:查找键是否存在
+2. keySet:获取所有的键  get:根据键获取值    
+3. entrySet:获取所有的k-v
+4. values:获取所有的值
+
+1>增强for循环
+Set keySet = map.keySet();
+for(Object obj : keySet){
+    System.out.println(key + "-" + map.get(key));
+}
+2>迭代器
+Iterator iterbator = keySet.iterator();
+while(iterator.hasNext()){
+    Object key = iterator.next();
+    System.out.println(key + "-" + map.get(key));
+}
+
+for(Object obj : set){
+    Map.Entry entry = (Map.Entry) obj;
+    System.out.println(entry.getKey() + "-" + entry.getValue());
+
+}
+
+
+HashMap小结：
+1）Map接口的常用实现类：HashMap、Hashtable和Properties
+2）HashMap是Map接口使用频率最高的实现类
+3）HashMap是以key-value对的方式来存储元素
+4）key不能重复，但是值可以重复，允许使用null键和null值
+5）如果添加相同的key，则会覆盖原来的key-value1，等同于修改
+6）与HashSet一样，不保证映射的顺序，因为底层是以hash表的方式来存储的
+7）HashMap没有实现同步，因此是线程不安全的。方法没有互斥的操作，没有synchronized
+
+HashMap底层机制及源码分析：
+    k-v是一个Node 实现了Map.Entry<K,V>
+    static class Node<K,V> implements Map.Entry<K,V> 
+扩容机制：
+    1）HashMap底层维护了Node类型的数组table，默认为null
+    2）当创建对象时，将加载因子(loadfactor)初始化为0.75
+    3）当添加k-v时，通过key的哈希值得到table的索引，然后判断该索引处是否有元素
+        如果没有元素直接添加，如果有元素，继续判断该元素的key是否和准备加入的key相等
+        如果相等，则直接替换v;如果不相等需要判断是树结构还是链表结构，做出相应处理
+        如果添加时发现容量不够，则需要扩容
+    4）第一次添加，则需要扩容table容量为16，临界值（threshold）为12
+    5）以后再扩容，table容量为原来的2倍，临界值为原来的2倍
+    6）再Java8中，如果一条链表的元素个数超过TREEIFY_THRESHOLD(默认是8)
+        并且table的大小 >= MIN_TREEIFY_CAPACITY(默认是64)，就会进行树化(红黑树)

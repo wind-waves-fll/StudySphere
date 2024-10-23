@@ -1,0 +1,33 @@
+BigInteger类：适合保存比较大的整型
+    public BigInteger(String val) {
+        this(val, 10);
+    }
+    public class Big_ {
+        public static void main(String[] args) {
+            BigInteger big = new BigInteger("11111111111111111111111111");
+            System.out.println(big);
+            BigInteger add = new BigInteger("1");
+            BigInteger bigadd = big.add(add);
+            //在对BigInteger进行加减乘除时，需要使用对应的方法
+            //add  subtract multiply divide
+        }
+    }
+
+BigDecimal类：适合保存比较大的浮点型
+    public BigDecimal(String val) {
+        this(val.toCharArray(), 0, val.length());
+    }
+
+    public class Big_ {
+        public static void main(String[] args) {
+            BigDecimal bigDecimal = new BigDecimal("11111.11");
+            BigDecimal d = new BigDecimal("3");
+            BigDecimal div = bigDecimal.divide(d,BigDecimal.ROUND_CEILING);//遇到循环小数，会保留分子的精度
+            System.out.println(div);
+
+    //        BigDecimal
+            //在对BigInteger进行加减乘除时，需要使用对应的方法
+            //add  subtract multiply divide
+        }
+    }
+

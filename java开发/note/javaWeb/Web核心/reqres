@@ -1,0 +1,108 @@
+service(request,response)
+    Request: 获取请求数据
+    Response: 设置响应数据
+
+Request 继承体系
+    ServletRequest     Java提供的请求对象根接口
+    HttpServletRequest Java提供的对HTTP协议封装的请求对象接口
+    RequestFacade       Tomcat定义的实现类        
+    1. Tomcat需要解析请求数据，封装为request对象，并将创建request对象传递到service方法中
+    2. 使用request对象 查看JavaEE API文档的HttpServletRequest 接口
+Request 获取请求数据
+    请求数据分为3部分：
+    1. 请求行
+        String getMethod():         获取请求方式: GET
+        String getContextPath():    获取虚拟目录
+        StringBuffer getRequestURL():获取URL
+        String getRequestURiI():    获取URI
+        String getQueryString():    获取请求参数（GET方式）
+
+    2. 请求头（键值对）
+        String getHeader(String name): 根据请求头，获取值
+            user-agent:浏览器的版本信息
+
+
+    3. 请求体
+        ServletInputStream getInputStream：获取字节输入流
+        BufferedReader getReader():获取字符输入流
+
+Request通用方式获取请求参数
+    Map<String,String[]> getParameterMap:   获取所有参数Map集合 
+    String[] getParameterValues(String name):根据名称获取参数值（数组）
+    String getParameter(String name)        根据名称获取单个值
+
+使用了通用方式获取请求方式
+
+中文乱码问题：
+    POST:
+        request.setCharacterEncoding("utf-8");
+    GET:
+        前端中文会转成URL编码(UTF-8),Tomcat进行URL解码(ISO-8859-1),tomcat没有提供方法修改编解码方式
+        URL编码：
+            1. 将字符串按照编码方式转成二进制
+            2. 每个字节转成2个16进制数并在前边加上% 
+    Tomcat8.0之后，已将GET请求乱码问题解决，设置默认的解码方式为UTF-8
+Request 请求转发：一种在服务器内部的资源跳转方式
+    request.getRequestDispatcher("/demo3.jsp").forward(request, response);
+    请求转发资源间数据共享：使用Request对象
+        request.setAttribute(String var1, Object var2);     存储数据
+        request.getAttribute(String var1);     根据key,获取值
+        request.removeAttribute(String var1);  根据key，删除键值对
+    请求转发特点：
+        浏览器地址栏路径不发生变化
+        只能转发到当前服务器的内部资源
+        一次请求，可以在转发资源间使用request共享数据
+
+
+Response 继承体系
+    ServletResponse      Java提供的请求对象根接口
+    HttpServletResponse  Java提供的对HTTP协议封装的请求对象接口
+    ResponseFacade       Tomcat定义的实现类      
+    
+Response设置响应数据功能介绍：
+    1. 响应行 HTTP/1.1 OK
+        setStatus(int sc): 设置响应状态码
+    2. 响应头
+        setHeader(String name, Object value):设置响应头键值对
+    3. 响应体
+        PrintWriter getWriter():获取字符输出流
+        ServletOutputStream getOutputStream():获取字节输出流
+Response重定向
+    重定向：一种资源跳转方式（关键：状态码302返回给浏览器，以及重定向的位置： 响应头 location ： xx）
+    resp.setStatus(302);
+    resp.setHeader("Location", "resp2");
+    特点：
+        浏览器地址栏路径不发生变化
+        可以重定向到任意位置的资源（服务器内部、外部均可）
+        两次请求，不能再多个资源使用request共享数据
+
+路径问题：
+    不用加是因为tomcat的默认访问路径是项目名/，相当于省略了
+
+
+Response响应字符数据
+    1. Response对象获取字符输出流
+    2. 写数据
+        response.setContentType("text/html;charset=UTF-8");//设置text/html才能解析，设置UTF-8才不会中文乱码
+        PrintWriter writer = response.getWriter();
+        writer.write("aaa");
+该流不需要关闭，随着响应结束，response对象销毁，由服务器关闭
+中文数据乱码：原因通过Response获取的字符输出流默认编码：ISO-8859-1
+
+Response响应字节数据
+    通过Response对象获取字节输出流：ServletOutputStream outputStream = resp.getOutputStream();
+    通过字节输出流写数据: outputStream.write(字节数据);
+        ServletOutputStream outputStream = response.getOutputStream();
+        FileInputStream fileInputStream = new FileInputStream("C:\\Users\\lulin\\Pictures\\java\\object.png");
+        
+        IOUtils.copy(fileInputStream, outputStream);
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        while ((len = fileInputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, len);
+        }
+        
+        fileInputStream.close();
+IOUtils工具类：
+    导入坐标
+    使用

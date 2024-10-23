@@ -1,0 +1,15 @@
+多态可以提高代码的复用性
+重写和重载体现多态
+
+
+一个对象的编译类型和运行类型可以不一致
+编译类型在定义对象时，就确定了，不能改变
+运行类型是可以改变的
+编译类型看定义时 = 的左边，运行类型看 = 的右边
+Animal animal = new Dog();
+Food food = new Food();
+
+然后所有的动物继承Animal,所有的食物继承Food
+则传参是可以这样写：
+void feed(Animal animal,Food food)
+

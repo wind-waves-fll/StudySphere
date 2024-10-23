@@ -1,0 +1,23 @@
+<!--
+    动态条件查询：
+        * if: 条件判断
+            * test : 逻辑表达式
+        * 问题
+            * 恒等式 1 = 1
+            * <where> 标签 替换 where 关键字
+--> 
+<select id="selectByCondition2" resultMap="brandResultMap">
+    select *
+    from tb_brand
+    <where>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="companyName != null and companyName != ''"  >
+            and company_name like #{companyName}
+        </if>
+        <if test="brandName != null and brandName != ''"  >
+            and brand_name like #{brandName}
+        </if>
+    </where>
+</select>

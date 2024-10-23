@@ -1,0 +1,11 @@
+实现步骤：
+    属性私有化
+    提供一个公有的set()方法
+    提供一个公有的get()方法    
+
+    有快捷键 alt+insert->getter and setter
+    可以将构造器和set()相结合
+    public person(String name,int age){
+        setName(name);
+        setAge(age);
+    }

@@ -1,0 +1,34 @@
+public final class Math {
+
+    /**
+     * Don't let anyone instantiate this class.
+     */
+    private Math() {}
+
+    /**
+     * The {@code double} value that is closer than any other to
+     * <i>e</i>, the base of the natural logarithms.
+     */
+    public static final double E = 2.718281828459045;
+
+{@link java.lang.StrictMath StrictMath}, all implementations of the equivalent
+Math类是一个final类
+方法是static final方法
+
+常用方法：
+1.  abs绝对值
+    return (a < 0) ? -a : a;
+2.  pow求幂
+3.  ceil向上取整
+4.  floor向下取整
+5.  round四舍五入
+6.  sqrt求开方
+7.  random求随机数
+        返回的是0<=x<1之间的一个随机小数
+        (int)(Math.random()*(b-a+1))+a---->得到a<=x<=b之间的书
+8.  max求最大值
+9   min求最小值
+
+
+
+

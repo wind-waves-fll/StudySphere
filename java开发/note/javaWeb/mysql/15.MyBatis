@@ -1,0 +1,45 @@
+MyBatis 
+    MyBatis是一款优秀的持久化框架，用于简化JDBC开发
+
+持久层：
+    负责将数据保存到数据库的那一层代码
+    JAVAEE三层框架：表现层、业务层、持久层
+
+框架：
+    框架就是一个半成品软件，是一套可重用的、通用的、软件基础代码模型
+    在框架的基础之上构建软件编写更加高效、规范、通用、可扩展
+
+JDBC缺点：
+    1. 硬编码--->配置文件
+        注册驱动，获取连接
+        SQL语句
+    2. 操作繁琐--->自动完成
+        手动设置参数
+        手动封装结果集
+
+MyBatis免除了几乎所有的JDBC代码以及设置参数和获取结果集的工作
+
+MyBatis入门：
+    1. 创建模块，导入坐标
+    2. 编写MyBatis核心配置文件，替换链接信息，解决硬编码问题
+    3. 编写SQL映射文件，统一管理SQL,解决硬编码问题
+    4. 编码
+        定义POJO类
+        加载核心配置文件，获取SqlSessionFactory对象
+        获取SqlSession对象，执行SQL语句
+        释放资源
+
+Mapper代理开发
+    1. 定义与SQL映射文件同名的Mapper接口，并且将Mapper接口和SQL映射文件放置在同一目录下
+        在resources下创建和java下相同的目录结构，编译后UserMapper.class和UserMapper.xml会放在同一目录
+    2. 设置SQL映射文件的namespace属性为Mapper接口全限定名
+    3. 在Mapper接口中定义方法，方法名就是SQL映射文件中sql语句的id,并保持参数类型和返回值类型一致
+    4. 编码
+        1. 通过SqlSession的getMapper方法获取Mapper接口的代理对象
+        2. 调用对应方法完成sql的执行
+
+MyBatisX插件：
+    一款基于IDEA的快速开发插件，为效率而生
+    主要功能：
+        XML和接口方法相互跳转
+        根据接口生成statement

@@ -1,0 +1,10 @@
+public static void main(String[] args)
+1. main方法是java虚拟机调用的，所以必须是public
+2. static 类方法，不用创建对象，就可以执行main方法，程序入口
+3. 该方法接受String类型的数组参数，该数组中保存执行java命令时传递给所运行的类的参数。
+    java  执行的程序  参数1  参数2  参数3
+
+静态方法main 可以访问本类的静态成员，不可以访问本类的非静态成员
+必须创建一个类的实例，才可以调用非静态成员。
+
+可以通过IDLE edit  program paragram来实现动态传参。

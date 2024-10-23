@@ -1,0 +1,4 @@
+批量删除：
+<foreach collection="ids" item="id">
+#{id}
+</foreach>

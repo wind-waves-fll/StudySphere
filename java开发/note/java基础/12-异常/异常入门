@@ -1,0 +1,69 @@
+ctrl + alt + t ,然后选择try-catch 即6
+
+异常可分为两类：
+(1) Error(错误)
+    Java虚拟机无法解决的严重问题
+        JVM系统内部错误、资源耗尽问题，比如：栈溢出、内存溢出
+        Error是严重错误，程序会崩溃
+(2) Exception:
+    其他因编程错误导致的问题。如空指针访问，试图读取不存在的文件，网络连接中断等。
+    Exception分为两类：运行时异常和编译时异常。
+    编译异常必须要处理，
+    运行异常可以不用理会，并不强制要求，因为有默认处理机制。
+
+Throwable(实现了Serializable接口，继承Object)
+    Exception
+        I. RuntimeException
+            1. NullPointerException  空指针异常
+            2. ArithmeticException  算术运算异常
+            3. ArrayIndexOutOfException 数组索引异常
+            4. ClassCastException   类型转换异常
+            5. NumberFormException  数字格式异常
+        II. 
+            1. FileNotFoundException //当操作不存在的文件时，发生异常
+            2. ClassNotFoundException //加载类，而类不存在时，发生异常
+            3. SQLException          //操作数据库发生异常
+            4. IOException           //操作文件时，发生异常
+            5. EOFException         //操作文件，到文件末尾，发生异常
+            6. IllegalArgumentException //参数异常
+     Error
+        I. StackOverflowError
+        II. OutOfMemoryError
+
+异常处理的方式：
+    1. try-catch-finally 程序员在代码中捕获发生的异常，自行处理
+        try{
+            代码，可能有异常
+        }catch（Exception e）{
+            //捕获到异常
+            //异常发生时，系统将异常封装成Exception对象 e，传递给catch块
+            //得到异常对象后，程序员自己处理
+        }finally{
+            //不管有没有发生异常，都执行finally代码块
+        }
+
+        可以有多个catch语句，不过父类异常要在后面，子类异常在前面，只会捕获一个catch块。
+    2. throws:将发生的异常抛出，交给调用者（方法）来处理，最顶级的处理者就是JVM
+        throws语句可以声明抛出异常的列表，throws后面的异常类型可以是方法中产生的异常，也可以是它的父类
+        子类重写父类的方法，抛出的异常类型要么与父类一致，或者是父类抛出异常的子类型。
+
+        抛出异常后，在调用者（方法）可以继续向上抛出异常，或者try-catch处理
+
+
+自定义异常：
+1. 定义类：自定义异常类名 继承Exception或RuntimeException
+           一般我们自定义异常都是继承RuntimeException
+           好处是我们可以使用默认的处理机制，即调用方法不用在throws
+
+    class AgeException extends RuntimeException{
+        public AgeException(String message){
+            super(message);
+        }
+    }
+
+
+throws:异常处理的一种方式，发给发声明出，后面是异常的类型
+throw:手动生成异常对象的关键字，在方法体中，后面是异常对象 
+
+
+

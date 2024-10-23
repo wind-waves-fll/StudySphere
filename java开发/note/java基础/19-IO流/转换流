@@ -1,0 +1,31 @@
+转换流：InputStreamReader 和 OutputStreamWriter
+默认情况下，读取文件是按照utf-8来编码的。
+
+
+public class InputStreamReader extends Reader 
+public InputStreamReader(InputStream in, Charset cs)：指定编码
+
+InputStreamReader isr = new InputStreamReader(new FileInputStream(filePath,"gbk"));
+BufferedReader br = new BufferedReader(isr);
+//BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath,"gbk")))
+String s = br.readLine();
+System.out.println(s);
+br.close();
+
+public class OutputStreamWriter extends Writer 
+public OutputStreamWriter(OutputStream out, Charset cs)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

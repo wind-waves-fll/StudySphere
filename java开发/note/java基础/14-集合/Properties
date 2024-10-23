@@ -1,0 +1,9 @@
+1. Properties类继承了Hashtable类并实现了Map接口，也是一种使用键值对的形式来保存数据
+2. 它的使用特点和Hashtable类似
+3. Properties 还可以用于从 xxx.Properties 文件中，加载数据到Properties类对象，并进行读取和修改
+4. 说明：工作后， xxx.Properties 文件通常作为配置文件，这个知识点再IO流举例。
+
+put()
+get()
+getProperty()
+remove()

@@ -1,0 +1,5 @@
+public final Class<?> getClass()
+返回此 Object 的运行时类。返回的 Class 对象是由所代表类的 static synchronized 方法锁定的对象。
+实际结果类型为 Class<? extends |X|>，其中 |X| 是调用 getClass 的表达式的静态类型的擦除。例如，在此代码片段中不需要进行转换：
+
+即获取对象的运行类型

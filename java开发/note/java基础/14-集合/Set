@@ -1,0 +1,106 @@
+Set接口基本结束
+1）无序，没有索引
+2）不允许重复元素，所以最多包含一个null
+3）JDK API的Set接口的实现类有：
+所有已知实现类:
+AbstractSet, ConcurrentHashMap.KeySetView, ConcurrentSkipListSet, CopyOnWriteArraySet, EnumSet, HashSet, JobStateReasons, LinkedHashSet, TreeSet
+
+public interface Set<E> extends Collection<E>
+遍历方式：
+1. 迭代器
+2. 增强for循环
+3. 不能使用索引的方式
+
+1. 以Set接口的实现类HashSet来讲解Set 接口的方法
+2. set接口的实现类的对象，不能存放重复的元素，可以添加一个null
+3. set接口存放数据时无序的(即添加的顺序和取出的顺序不一样)
+4. 注意：取出的顺序虽然不是添加的顺序，但是它是固定的
+
+
+HashSet:
+public class HashSet<E>
+    extends AbstractSet<E>
+    implements Set<E>, Cloneable, java.io.Serializable
+transient HashMap<E,Object> map;
+    public HashSet() {
+            map = new HashMap<>();
+    }
+底层其实是一个HashMap();
+
+add方法后，会返回一个boolean值，如果添加成功，返回true，否则会返回false
+可以通过remove删除一个元素
+public boolean add(E e) {
+        return map.put(e, PRESENT)==null;
+}
+    HashSet hashSet = new HashSet();
+    System.out.println(hashSet.add("fll"));                 //true
+    System.out.println(hashSet.add("fll"));                 //false
+
+    System.out.println(hashSet.add(new String("fll")));     //false
+    System.out.println(hashSet.add(new String("fll")));     //false
+
+    System.out.println(hashSet.add(new String("hsp")));     //true
+    System.out.println(hashSet.add(new String("hsp")));     //false
+
+    System.out.println(hashSet.add(new Dog("hsp")));     //true
+    System.out.println(hashSet.add(new Dog("hsp")));     //false
+
+
+public boolean remove(Object o) {
+        return map.remove(o)==PRESENT;
+}
+
+HashSet的底层是HashMap,HashMap的底层是  数组+链表+红黑树
+
+HashSet的底层机制说明
+分析HashSet的扩容机制是如何实现的：
+    1. HashSet的底层是HashMap
+            newCap = DEFAULT_INITIAL_CAPACITY;
+            newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
+        第一次添加时，table数组扩容到DEFAULT_INITIAL_CAPACITY（16），临界值时16 * 加载因子
+        即数组用到12时，就开始扩容
+        newCap = oldCap << 1
+        如果table数组使用到了临界值12，就会扩容到16 * 2 = 32，新的临界值就是32 * 0.75 = 24，以此类推
+        每执行一次add()方法，就会调用一次++size,当++size > threshold，就会扩容。
+            if (++size > threshold)
+                resize();
+
+    2. 添加一个元素时，先得到hash值，会转成-->索引值
+    3. 找到存储数据表table，看这个索引位置是否已经存放元素
+    4. 如果没有，直接加入
+    5. 如果有，用equals比较，如果相同，则放弃添加，如果不相同，则添加到最后。 
+        equals由程序员自己进行重写
+    6. 在Java8中，如果一条链表的元素个数超过默认值TREEIFY_THRESHOLD（8），并且table的大小>=MIN_TREEIFY_CAPACITY（64）,则会转化成红黑树
+
+
+Set接口的实现类     LinkedHashSet
+public class LinkedHashSet<E>
+    extends HashSet<E>
+    implements SequencedSet<E>, Cloneable, java.io.Serializable {   
+1）LinkedHashSet 是 HashSet 的子类
+2）LinkedHashSet底层是一个LinkedHashMap ， 底层维护了一个数组 + 双向链表
+    map = new LinkedHashMap<>(initialCapacity, loadFactor);
+3）LinkedHashSet 根据元素的hashCode 值来决定元素的存储位置。 同时使用链表维护元素的索引
+    这使得元素看起来是以插入顺序保存的
+4）LinkedHashSet不允许添重复元素
+
+说明
+1）在LinkedHashSet 中维护了一个hash表和双向链表
+    LinkedHashSet 有head和tail
+    添加第一次时，直接将数组table扩容到16， 存放的结点类型时HashMap$Node
+    数组类型时HashMap$Node 存放的元素是LinkedHashMap$Entry
+        // 继承关系是在内部类完成，可以通过类名来访问，说明是一个静态内部类
+        // static class Node<K,V> 
+        static class Entry<K,V> extends HashMap.Node<K,V> {
+            Entry<K,V> before, after; //before,after 实现双向链表的连接
+            Entry(int hash, K key, V value, Node<K,V> next) {
+                super(hash, key, value, next);
+            }
+        }
+2）每一个节点有before 和 after 属性，这样可以形成双向链表
+3）再添加一个元素时，先求hash值，再求索引，确定该元素在table表中的位置
+   然后将添加的元素加入到双向链表。如果已经存在，则不添加
+    tail.next = newElement
+    newElement.pre = tail
+    tail = newElement
+4）这样的话，我们遍历LinkedHashSet 也能保证插入顺序和遍历顺序一致

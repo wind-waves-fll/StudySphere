@@ -1,0 +1,32 @@
+public class Interger_ {
+    public static void main(String[] args) {
+        Integer i1 = new Integer(1);
+        Integer j1 = new Integer(1);
+        System.out.println(i1 == j1);//False
+
+        Integer i2 = 1;
+        Integer j2 = 1;//  Integer j2 = Integer.valueOf(1)
+        //阅读源码，看看究竟是怎么实现的。
+        /*
+         *     
+         * public static Integer valueOf(int i) {
+            if (i >= IntegerCache.low && i <= IntegerCache.high)    //-128~127
+                return IntegerCache.cache[i + (-IntegerCache.low)];
+            return new Integer(i);
+            }
+         */
+        System.out.println(i2 == j2);//true
+        //
+
+        Integer i3 = 128;
+        Integer j3 = 128;
+        System.out.println(i3 == j3);//false
+
+    }
+}
+
+
+只要有基本数据类型，判断的是值是否相等
+Integer i = 127;
+int j = 127;
+System.out.println(i == j);//true

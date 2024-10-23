@@ -1,0 +1,61 @@
+Web服务器
+    Web服务器是一个应用程序(软件)，对HTTP协议的操作进行封装，使得程序员不必对协议进行操作，让Web开发更加便捷，
+    主要功能是“提供网上信息浏览服务”
+    Apache Tomcat
+    WebLogic
+    WebSphere
+    jetty
+
+Tomcat（https://tomcat.apache.org/）:
+    概念：Tomcat是Apache软件基金会的一个核心项目，是一个开源免费的轻量级Web服务器，支持Servlet/JSP少量JavaEE规范
+    JavaEE: java企业版，指java企业级开发的技术规范总和。
+    Tomcat也被称为Web容器、Servlet容器，Servlet需要依赖于Tomcat才能运行
+
+Web 服务器作用？
+    封装HTTP协议操作，简化开发
+    可以将web项目部署到服务器中，对外提供网上浏览服务
+Tomcat是一个轻量级的web服务器，支持Servlet/JSP少量JavaEE规范，也被称为Web容器、Servlet容器。
+    下载：官网下载
+    安装：绿色版，直接解压即可
+    卸载：直接删除目录
+    启动：双击 bin/startup.bat 需要配置JAVA_HOME目录才可以启动
+    关闭：直接关闭（强制关闭）或双击 bin/shutdown.bat（正常关闭） 或者 ctrl + c（正常关闭） 
+
+    控制台乱码问题：修改conf/logging.properties 的 java.util.logging.ConsoleHandler.encoding = GBK
+
+Tomcat配置：
+    如何修改启动端口号：conf/server.xml
+        <Connector port="8080" protocol="HTTP/1.1"
+        connectionTimeout="20000"
+        redirectPort="8443" />
+        HTTP的默认端口号：80,如果把Tomcat端口号改为80，则访问时不用输入端口号
+    启动可能存在的问题：
+        1. 端口号冲突：找到对应层序，将其关闭
+        2. 启动窗口一闪而过，检查JAVA_HOME环境变量是否正确配置
+    Tomcat部署项目：
+        将项目放置在webapps目录下，即部署完成
+        一般javaWeb项目会被打包成war包，然后将war包放在webapps目录下，Tomcat会自动解压war文件
+
+在IDEA中创建Maven Web项目
+web项目：
+    web项目结构：
+        webapp              web项目特有目录
+            html            HTML文件目录（可自定义）
+            WEB-INF         web项目核心目录（必须叫这个名称）
+                web.xml     web项目的配置文件
+部署的javaWeb目录：
+    html:       HTML文件目录（可自定义）
+    WEB-INF     web项目核心目录（必须叫这个名称）
+        classes java字节码文件
+        lib     项目所需的jar包
+        web.xml web项目配置文件
+
+创建web项目：
+    选中目录，双击shift,找到Add Framework Support，选择web，完成创建
+
+
+
+
+
+IDEA使用Tomcat:
+    

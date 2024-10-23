@@ -1,0 +1,89 @@
+SELECT
+    字段列表
+FROM
+    表名列表
+WHERE
+    条件列表
+GROUP BY
+    分组字段
+HAVING
+    分组后条件
+ORDER BY
+    排序字段
+LIMIT
+    分页限定
+
+基础查询
+条件查询(WHERE)
+分组查询(GROUP BY)
+排序查询(ORDER BY)
+分页查询(LIMIT)
+
+基础查询:
+    1. 查询多个字段
+        SELECT 字段列表 FROM 表名；
+        SELECT * FROM 表名；
+    2. 去除重复记录
+        SELECT DISTINCT 字段列表 FROM 表名；
+    3. 起别名
+        AS 也可以省略
+        SELECT name as 姓名,math as 数学成绩 from stu;
+
+条件查询(WHERE)：
+    1. 语法
+    SELECT 字段列表 FROM 表名 WHERE 条件列表；
+    2. 条件
+        >
+        <
+        >=
+        <=
+        =
+        <>或!=
+        BETWEEN ... AND ...
+        IN(...)                 
+        LIKE 占位符             模糊查询：_单个任意字符  %多个任意字符(也可以是0个)
+        IS NULL
+        IS NOT NULL
+        AND 或 &&
+        OR 或 ||
+        NOT 或 ！
+
+排序查询(ORDER BY)
+    1. 语法
+        SELECT 字段列表 FROM 表名 ORDER BY 排序列表名1 [排序方式1] 排序列表名2 [排序方式2] 排序列表名3 [排序方式3]；
+        排序方式：
+            ASC:升序排列（默认值）
+            DESC:降序排列
+        注意：多字段排序，只有当前面相等时，才根据后面字段排序。
+
+聚合函数：将一列数据作为一个整体，进行纵向计算
+    1. count(列名)  统计数量      一般选用不为null的列。
+    2. max(列名)    最大值
+    3. min(列名)    最小值
+    4. sum(列名)    求和
+    5. avg(列名)    求平均值
+注意：null值不参与所有聚合函数运算
+语法：
+    SELECT 聚合函数名(列名) FROM 表名；
+
+
+分组查询(GROUP BY)
+    SELECT 字段列表 FROM 表名 [WHERE 条件列表] GROUP BY 分组字段名 [HAVING 分组后条件过滤]
+    注意：分组之后，查询的字段为聚合函数和分组字段，查询其他字段没有意义。
+    SELECT sex , avg(math) from stu GROUP BY sex
+
+    WHERE 和 HAVING 区别：
+        执行时机不一样：WHERE 是分组之前进行限定，不满足WHERE条件，则不参加分组
+                        而HAVING 是分组之后对结果进行过滤
+        可判断的条件不一样：WHERE不能对聚合函数进行判断，HAVING可以。
+    
+    执行顺序： WHERE > 聚合函数 > HAVING
+
+分页查询(LIMIT)
+    1. 语法：SELECT 字段列表 FROM 表名 LIMIT 起始索引，查询条目数
+        起始索引：从0开始
+        计算公式： 起始索引 = （当前页码-1）* 每页显示的条数
+    注意：
+        分页查询 LIMIT 是MYSQL数据库的方言
+        Oracle分页查询使用rownumber
+        SQL Server分页查询使用 top

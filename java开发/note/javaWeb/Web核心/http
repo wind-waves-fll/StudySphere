@@ -1,0 +1,51 @@
+JavaWeb 技术栈：
+B/S 架构：
+    浏览器/服务器 它的特点是客户端是需要浏览器，应用程序的逻辑和数据都存储在服务器端，浏览器只需要请求服务器，获取Web资源，
+    服务器把Web资源发送给浏览器即可。
+    好处：易于维护升级；服务器端升级后，客户端无需任何部署就可以使用到新的版本
+        静态资源：HTML,CSS,JavaScript,图片等，负责页面展示
+        动态资源：Servlet,JSP等，负责逻辑处理。
+        数据库：负责存储数据
+    
+HTTP:
+    超文本传输协议，规定了浏览器和服务器之间传输数据的规则。
+    浏览器 --> 请求 --> 服务器 --> 响应 --> 浏览器 
+    HTTP协议特点：
+        1. 基于TCP协议：面向连接，安全
+        2. 基于请求-响应模型：一次请求对应一次响应
+        3. HTTP协议是无状态的协议：对于事务处理没有记忆能力，每次请求-响应都是独立的
+            缺点：多次请求间不能共享数据，Jaava中使用会话技术（Cookie、Session）来解决这个问题
+            优点：速度快
+
+    HTTP请求数据的格式：
+        1. 请求行
+            请求数据的第一行，其中GET表示请求方式 /表示请求资源路径 HTTP/1.1表示协议版本
+        2. 请求头
+            第二行开始，格式为key:value形式
+            Host:表示请求的主机名
+            User-Agent:浏览器的版本
+            Accept:浏览器接收的资源类型
+            Accept-language:浏览器偏好的语言
+            Accept-Encoding:浏览器支持的压缩类型，例如gzip,deflate等
+        3. 请求体
+            POST请求的最后一部分，存放请求参数
+        
+        GET请求和POST请求区别：
+            1. GET请求参数在请求行中，没有请求体，POST请求参数在请求体中
+            2. GET请求参数大小有限制，POST没有
+    
+    HTTP响应数据的格式：
+        1. 响应行
+            响应数据的第一行。其中HTTP/1.1表示协议版本，200表示响应状态码。OK表示状态码描述。
+        2. 响应头
+            第二行开始，数据为key:value形式
+            Content-Type:表示响应内容的类型，如text/html,image/jpeg
+            Content-length:表示该响应内容的长度(字节数)
+            Content-Encoding:表示该响应压缩算法，如gzip
+            Content-Control:指示客户端应如何缓存。如max-age=300 表示最多可以缓存300秒
+        3. 响应体
+            最后一部分，存放响应数据
+
+![image-20240926162155437](C:\Users\lulin\AppData\Roaming\Typora\typora-user-images\image-20240926162155437.png)
+
+![image-20240926162400765](D:\java开发\笔记\javaWeb\Web核心\assert\images\http\image-20240926162400765.png)

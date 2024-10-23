@@ -1,0 +1,47 @@
+代表的是可变的字符序列，可以对字符串进行增减。
+很多方法是和String相同，但StringBuffer是可变长度的
+StringBuffer是一个容器
+public final class StringBuffer
+    extends AbstractStringBuilder
+    implements Appendable, Serializable（说明可以串行化）, Comparable<StringBuffer>, CharSequence
+    
+    父类：AbstractStringBuilder
+        // The value is used for character storage.
+        byte[] value;  //用于存储，不是final类型的，可以改变，放在堆中
+    StringBuffer类是final类，不能被继承
+
+StringBuffer的更新实际上可以更新内容，不用每次更新地址，效率较高
+StringBuffer构造器：
+    1. StringBuffer stringBuffer = new StringBuffer(); 默认是16
+    2. StringBuffer stringBuffer = new StringBuffer(100); 
+    3. StringBuffer stringBuffer = new StringBuffer("hello"); 字符串长度 + 16
+
+String ---> StringBuffer
+    String str = "hello";
+    //方式1 使用构造器
+    StringBuffer stringBuffer = new StringBuffer(str);
+    //方式2 使用append方法
+    StringBuffer stringBuffer = new StringBuffer();
+    stringBuffer.append(str);
+
+
+StringBuffer ---> String
+    StringBuffer stringBuffer = new StringBuffer("hello"); 字符串长度 + 16
+    //方式1 使用toString方法
+    String s1 = stringBuffer.toString();
+    //方式2 使用构造器
+    String s1 = new String(stringBuffer);
+
+常用方法：
+    append
+    delete(staet,end)
+    replace(start,end,string):将start--end间的内容用string替换掉，不含end
+    indexOf
+    insert
+    length
+
+
+
+
+
+

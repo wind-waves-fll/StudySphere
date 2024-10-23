@@ -1,0 +1,8 @@
+单行注释  //
+多行注释  /* */ ctrl +/
+文档注释：注释内容可以被JDK提供的工具javadoc所解释，生成一个说明文档
+直接输入/** 回车
+javadoc -d 文件夹名 -xx -yy Demo.java 
+javadoc -d d:\\temp -author -version Comment.java
+或者直接用IDLE生成  Tools->Generate JavaDoc就可以生成了。
+

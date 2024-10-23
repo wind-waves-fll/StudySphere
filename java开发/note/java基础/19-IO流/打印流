@@ -1,0 +1,4 @@
+PrintStream 和 PrintWriter
+
+//默认情况下，PrintStream的输出位置是标准输出，即显示器
+//我们可以修改打印流的输出位置

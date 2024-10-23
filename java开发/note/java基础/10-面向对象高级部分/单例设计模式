@@ -1,0 +1,20 @@
+单例：即只能创建一个对象
+步骤如下：
+    1. 构造器私有化，防止用户直接new
+    2. 类的内部创建对象
+    3. 向外暴露一个静态的公共方法，getInsatance
+    4.  饿汉式： private static Cat  cat = new Cat();
+        懒汉式：
+            private static Cat  cat;
+            public static Cat getInstance(){
+                if(cat == null){
+                    cat = new Cat("dasd")
+                }
+                return cat;
+            }
+
+    饿汉式和懒汉式最主要的区别在于创建对象的时机不同：
+        饿汉式是在类加载就创建了对象，而懒汉式是在使用时才创建。
+    饿汉式不存在线程安全问题，懒汉式存在线程安全问题。
+    饿汉式存在资源浪费的可能
+    

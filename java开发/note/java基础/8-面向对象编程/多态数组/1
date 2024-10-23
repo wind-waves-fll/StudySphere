@@ -1,0 +1,14 @@
+数组的定义类型为父类类型，里面保存的实际元素是子类类型。
+
+如何调用子类特有的方法呢？？？
+for(int i=0;i<5;i++){
+    System.out.println(person[i].say());;
+    if(person[i] instanceof Student){
+        Student student = (Student) person[i];
+        student.study();
+    }
+    if(person[i] instanceof Teacher){
+        Teacher teacher = (Teacher) person[i];
+        teacher.teach();
+    }
+}

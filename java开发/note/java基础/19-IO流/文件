@@ -1,0 +1,28 @@
+文件流：
+文件在程序中是以流的形式来操作的（内存而言）
+java程序（内存）---->(输出流)----> 文件（磁盘）
+ 文件（磁盘）---->(输入流)----> java程序（内存）
+
+public class File
+    implements Serializable, Comparable<File>
+
+常用的文件操作：
+new File(String pathname)           //根据路径创建一个File对象
+new File(File parent,String child)  //根据父目录文件+子路径构建
+new File(String parent,String child)///根据父目录+子路径构建
+
+createNewFile  创建新文件
+
+获取文件的相关信息：
+getName         //获取文件名字
+getAbsolutePath //获取文件绝对路径
+getParent       //获取文件父目录
+length          //获取文件大小（以字节为单位）
+exists          //文件是否存在
+isFile          //是否是文件
+isDirectory     //是否是目录
+
+目录操作和文件删除
+mkdir:创建一级目录
+mkdirs:创建多级目录
+delete：删除空目录或文件

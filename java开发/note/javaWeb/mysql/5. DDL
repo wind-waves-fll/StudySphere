@@ -1,0 +1,69 @@
+DDL(Data Definition Language):
+    数据定义语言，用来定义数据库对象：数据库，表，列等
+
+操作数据库：
+    1. 查询
+        SHOW DATABASES;
+    2. 创建
+        CREATE DATABASES 数据库名称；
+        CREATE DATABASES IF NOT EXISTS 数据库名称；
+    3. 删除
+        DROP DATABASES 数据库名称；
+        DROP DATABASES IF EXISTS 数据库名称；
+    4. 使用数据库
+        SELECT DATABASE();//查看当前使用的数据库
+        USE 数据库名称；
+
+查询表：
+    1. 查询当前数据库下所有表名称
+        SHOW TABLES;
+    2. 查询表结构
+        DESC 表名称；
+
+创建表：
+    CREATE TABLE 表名{
+        字段名1     数据类型1,
+        字段名2     数据类型2,
+        ...
+        字段名n     数据类型n  // 最后一个不能有逗号
+    };
+
+    数据类型：
+        数值
+            tinytint        1 byte      小整数值
+            smallint        2 byte      大整数值
+            mediumint       3 byte      大整数值
+            int或integer    4 byte      大整数值            age int
+            bigint          8 byte      极大整数值
+            float           4 byte      单精度浮点数值
+            double          8 byte      双精度浮点数值      score double(总长度，小数点后保留的位数)
+            decimal         1 byte      小数值
+        日期
+            date            3           年月日              birthday date
+            time            3           时分秒
+            year            1           年份值
+            datetime        8           混合日期和时间值
+            timestamp       4           混合日期和时间值、时间戳（不太建议）
+        字符串
+            char            0~255       定长字符串          name char(10)  不够用空格补齐，存储的性能高，浪费空间
+            varchar         0~65535     变长字符串          name varchar(10)              存储的性能低，节约空间
+            tinyblob        0~255       不超过255个字符的二进制字符串
+            tinytext        0~255       短文本字符串
+            blob            0~65535     二进制字符串
+            text            0~65535     长文本字符串
+            mediumblob      
+            mediumtext
+            longblob
+            longtext
+
+修改表：
+    1. 修改表名 ALTER TABLE 表名 RENAME TO 新的表名；
+    2. 添加一列 ALTER TABLE 表名 ADD 列名 数据类型；
+    3. 修改数据类型 ALTER TABLE 表名 modify 列名 新的数据类型；
+    4. 修改列名和数据类型  ALTER TABLE 表名 change 列名 新列名 新的数据类型；
+    5. 删除列 ALTER TABLE 表名 DROP 列名；
+
+
+删除表：
+    DROP TABLE 表名称；//没有表的话会报错，建议使用下面的，先判断在删除
+    DROP TABLE IF EXISTS 表名称；

@@ -1,0 +1,28 @@
+Hashtable的基本介绍：
+1）存放的元素是键值对：即K-V
+2）Hashtable的键和值都不能为null
+3）Hashtable的使用方法基本上和HashMap一样
+4）Hashtable是线程安全的，HashMap是线程不安全的
+
+public Hashtable() {
+    this(11, 0.75f);
+}
+public Hashtable(int initialCapacity, float loadFactor) 
+private transient Entry<?,?>[] table;
+table = new Entry<?,?>[initialCapacity];
+1. 底层有数组Hashtable$Entry[] 初始化大小为11
+2. threshole 11*0.75 = 8
+3. 扩容：按照自己的扩容机制来进行即可
+4. 执行方法 addEntry(hash, key, value, index);
+        if (count >= threshold) {
+            // Rehash the table if the threshold is exceeded
+            rehash();
+            {
+                int newCapacity = (oldCapacity << 1) + 1;//新的容量大小 = 
+            }
+
+            tab = table;
+            hash = key.hashCode();
+            index = (hash & 0x7FFFFFFF) % tab.length;
+        }
+5. 当 if (count >= threshold) 满足时，就按照 int newCapacity = (oldCapacity << 1) + 1;进行扩容

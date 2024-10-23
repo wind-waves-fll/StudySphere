@@ -1,0 +1,11 @@
+NEW         尚未启动的线程的线程状态。
+RUNNABLE    可运行线程的线程状态。
+    就绪状态：线程被调度器选中，就进入运行状态
+    运行状态：线程被挂起或调用yield就会进入就绪状态
+
+TERMINATED  已终止线程的线程状态。
+BLOCKED     等待监视器锁的线程的线程状态。
+WAITING     等待线程的线程状态。
+TIMED_WAITING具有指定等待时间的等待线程的线程状态。 调用Sleep会进入超时等待
+
+System.out.println(t.getName() + "状态" + t.getState())

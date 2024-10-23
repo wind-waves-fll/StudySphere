@@ -1,0 +1,12 @@
+使用注解开发会比配置文件开发更加方便
+@Select("select * from tb_brand where id = #{id}")
+public User selectById(int id);
+
+查询：@Select
+添加：@Insert
+修改：@Update
+删除：@Delete
+
+提示：
+    注解完成简单功能
+    配置文件完成复杂功能
